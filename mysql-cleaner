@@ -1,0 +1,20 @@
+#!/bin/bash
+
+#in seconds
+MAX_SLEEP_TIME=60
+MYSQL_USER=root
+MYSQL_PASS=root
+
+sleptProcess=$(mysqladmin proc | grep Sleep)
+
+for i in $(mysql -e 'show processlist' | grep 'Sleep' | awk '{print $1}'); do
+	sleeptime=$(mysqladmin proc | grep "\<$i\>" | grep -v '\-\-' | grep -v 'Time' | awk -F'|' '{ print $7 }' | sed 's/ //g' | tail -1);
+	sleeptime=$((sleeptime + 1))
+        echo "${i} is sleeping since last ${sleeptime} seconds"
+
+	if [ "$sleeptime" -gt "$MAX_SLEEP_TIME" ]; then
+               	echo "Killing proccess: ${i} as it is in sleeping state for more than ${MAX_SLEEP_TIME} seconds"; mysql -u $MYSQL_USER -p$MYSQL_PASS -e "kill ${i}";
+               	prockilled=$((prockilled+1));
+	fi
+
+done
