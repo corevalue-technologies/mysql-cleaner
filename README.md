@@ -10,7 +10,7 @@ Modify the MAX_SLEEP_TIME variable in mysql-cleaner in case you would like to ki
 
 Also add MYSQL_USER and MYSQL_PASS in same file
 
-## Usage of website-downloader
+## Usage of mysql-cleaner
 You can also run it as a cron job, the cron would look something like this:
 
 `*/2 * * * * /path/to/the/script/mysql-cleaner /dev/null 2>&1`
